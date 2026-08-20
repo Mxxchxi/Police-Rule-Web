@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "convex dev --once && vite",
+    "dev": "convex dev --start \"vite\"",
     "codegen": "convex codegen",
     "build": "convex codegen && tsc -b && vite build",
     "lint": "eslint .",
