@@ -5,7 +5,6 @@ import { RandomReader, generateRandomString } from "@oslojs/crypto/random";
 export const emailOtp = Email({
   id: "email-otp",
   maxAge: 60 * 15, // 15 minutes
-  // This function can be asynchronous
   async generateVerificationToken() {
     const random: RandomReader = {
       read(bytes: Uint8Array) {
@@ -16,17 +15,22 @@ export const emailOtp = Email({
     return generateRandomString(random, alphabet, 6);
   },
   async sendVerificationRequest({ identifier: email, token }) {
+    const apiKey = process.env.FREEBUFF_EMAIL_API_KEY;
+    if (!apiKey) {
+      throw new Error("FREEBUFF_EMAIL_API_KEY is not configured");
+    }
+
     try {
       await axios.post(
         "https://auth.freebuff.app/send_otp",
         {
           to: email,
           otp: token,
-          appName: process.env.VLY_APP_NAME || "a freebuff.com application",
+          appName: process.env.VLY_APP_NAME || "Police Rule Web",
         },
         {
           headers: {
-            "x-api-key": "fb_email_2crN1hqIArZP2bEfvjp5Qik4",
+            "x-api-key": apiKey,
           },
         },
       );
